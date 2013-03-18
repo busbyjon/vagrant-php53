@@ -32,4 +32,6 @@ In the vagrant-php53 directory run:
 vagrant up
 ```
 
-Visit http://localhost:8000/ in a web browser
+and then put your code in the ```project``` directory and goto:
+
+http://localhost:8000/ in a web browser

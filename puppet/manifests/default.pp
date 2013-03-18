@@ -49,6 +49,7 @@ class setup_php_centos {
 	
 	php::module { [ 'suhosin', ]:
         notify  => Class['php::fpm::service'],
+		source => "/vagrant/conf/php/suhosin.ini",
     }
 	
 	php::module { [ 'pdo' ]:
@@ -73,6 +74,38 @@ class setup_php_centos {
 }
 
 
+class symfony2_centos {
+
+	exec { 'php-composer':
+        command => '/usr/bin/curl -s https://getcomposer.org/installer | /usr/bin/php',
+        unless => "/usr/bin/test -e /usr/local/bin/composer",
+		cwd => "/tmp",
+        require => Class['php::install'],
+    }
+	
+	file { "/usr/local/bin/composer.phar":
+        owner   => root,
+        group   => root,
+        mode    => 755,
+        source  => "/tmp/composer.phar",
+		require => Exec["php-composer"],
+        notify  => Class['php::fpm::service'],
+    }
+	
+	file { "/vagrant/project":
+        owner   => nginx,
+        group   => nginx,
+		ensure  => directory,
+        mode    => 664,
+        notify  => [
+			Class['php::fpm::service'],
+			Service['nginx']
+		],
+    }
+	
+}
+
+
 class {'vim':}
 
 class {'repo_epel':}
@@ -91,4 +124,4 @@ class { 'memcached':
 
 include setup_nginx
 include setup_php_centos
-
+include symfony2_centos
