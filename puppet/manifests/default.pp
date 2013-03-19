@@ -37,7 +37,7 @@ class setup_php_centos {
 
     php::module { [
         'gd', 'mcrypt', 'pecl-memcached', 'mysql',
-        'tidy', 'pecl-xhprof',
+        'tidy', 'pecl-xhprof','xml',
         ]:
         notify => Class['php::fpm::service'],
     }
