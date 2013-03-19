@@ -97,6 +97,7 @@ class symfony2_centos {
         group   => nginx,
 		ensure  => directory,
         mode    => 664,
+		require => Package['nginx'],
         notify  => [
 			Class['php::fpm::service'],
 			Service['nginx']
