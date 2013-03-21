@@ -20,6 +20,10 @@ Requirements:
 How to use:
 -----------
 
+Install Virtualbox from [here](http://www.virtualbox.org/wiki/Downloads)
+
+Intall the latest version of Vagrant from [here](http://downloads.vagrantup.com/)
+
 Clone this repository with:
 
 ```shell
