@@ -4,7 +4,7 @@
 
 Vagrant.configure("2") do |config|
 
-  config.vm.hostname = "TestVagrantbox"
+  config.vm.hostname = "partnermarketing-php53"
 
   # The base Vagrant/VirtualBox box
   config.vm.box = "centos-6.3-chef-10.14.2"
