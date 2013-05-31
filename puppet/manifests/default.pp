@@ -4,26 +4,27 @@
 #
 class setup_nginx {
 
-  #
-  # Lets the Debian style sites-enabled and sites-available dirs!
-  #
-  file { "/etc/nginx/sites-enabled/":
-	ensure  => directory,
-	path    => "/etc/nginx/sites-enabled/",
-	owner   => "root",
-	group   => "root",
-	mode    => "0664",
-	require => Package["nginx"],
-  }
+    #
+    # Lets the Debian style sites-enabled and sites-available dirs!
+    #
+    
+    file { "/etc/nginx/sites-enabled/":
+	  ensure  => directory,
+	  path    => "/etc/nginx/sites-enabled/",
+	  owner   => "root",
+	  group   => "root",
+	  mode    => "0664",
+	  require => Package["nginx"],
+    }
 
-  file { "/etc/nginx/sites-available/":
-	ensure  => directory,
-	path    => "/etc/nginx/sites-available/",
-	owner   => "root",
-	group   => "root",
-	mode    => "0664",
-	require => Package["nginx"],
-  }
+    file { "/etc/nginx/sites-available/":
+	  ensure  => directory,
+	  path    => "/etc/nginx/sites-available/",
+	  owner   => "root",
+	  group   => "root",
+	  mode    => "0664",
+	  require => Package["nginx"],
+    }
 
     include nginx
 
