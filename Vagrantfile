@@ -2,6 +2,12 @@
 # vi: set ft=ruby :
 # Partnermarketing.com Vagrant sandbox (PHP 5.3)
 
+def Kernel.is_windows?
+    # Detect if we are running on Windows
+    processor, platform, *rest = RUBY_PLATFORM.split("-")
+    platform == 'mingw32'
+end
+
 Vagrant.configure("2") do |config|
 
   config.vm.hostname = "partnermarketing-php53"
@@ -25,7 +31,8 @@ Vagrant.configure("2") do |config|
   config.ssh.max_tries = 50
   config.ssh.timeout = 300
 
-  config.vm.synced_folder "./project", "/web", :nfs => true
+  nfs = !Kernel.is_windows?
+  config.vm.synced_folder "./project", "/web", :nfs => nfs
 
   config.vm.provision :puppet do |puppet|
     puppet.manifests_path = "puppet/manifests"
