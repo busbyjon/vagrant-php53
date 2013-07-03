@@ -4,8 +4,30 @@
 #
 class setup_nginx {
 
-	include nginx
-	
+    #
+    # Lets the Debian style sites-enabled and sites-available dirs!
+    #
+    
+    file { "/etc/nginx/sites-enabled/":
+	  ensure  => directory,
+	  path    => "/etc/nginx/sites-enabled/",
+	  owner   => "root",
+	  group   => "root",
+	  mode    => "0664",
+	  require => Package["nginx"],
+    }
+
+    file { "/etc/nginx/sites-available/":
+	  ensure  => directory,
+	  path    => "/etc/nginx/sites-available/",
+	  owner   => "root",
+	  group   => "root",
+	  mode    => "0664",
+	  require => Package["nginx"],
+    }
+
+    include nginx
+
 	file { "nginx_symfony2.conf":
 		owner  => root,
 		group  => root,
@@ -24,6 +46,7 @@ class setup_nginx {
 		require => Package['nginx'],
 		notify => Service['nginx'],
 	}
+
 }
 
 #
@@ -32,27 +55,27 @@ class setup_nginx {
 class setup_php_centos {
 
 	require repo_epel
-	
+
 	include php::fpm
 
-    php::module { [
+	php::module { [
         'gd', 'mcrypt', 'pecl-memcached', 'mysql',
         'tidy', 'pecl-xhprof','xml',
         ]:
         notify => Class['php::fpm::service'],
     }
 
-	php::module { [ 'pecl-xdebug', ]:
+    php::module { [ 'pecl-xdebug', ]:
         notify  => Class['php::fpm::service'],
-		source => "/vagrant/conf/php/xdebug.ini",
+        source => "/vagrant/conf/php/xdebug.ini",
     }
-	
-	php::module { [ 'suhosin', ]:
+
+    php::module { [ 'suhosin', ]:
         notify  => Class['php::fpm::service'],
-		source => "/vagrant/conf/php/suhosin.ini",
+        source => "/vagrant/conf/php/suhosin.ini",
     }
-	
-	php::module { [ 'pdo' ]:
+
+    php::module { [ 'pdo' ]:
         notify  => Class['php::fpm::service'],
     }
 
@@ -73,7 +96,6 @@ class setup_php_centos {
     }
 }
 
-
 class symfony2_centos {
 
 	exec { 'php-composer':
@@ -82,7 +104,7 @@ class symfony2_centos {
 		cwd => "/tmp",
         require => Class['php::install'],
     }
-	
+
 	file { "/usr/local/bin/composer.phar":
         owner   => root,
         group   => root,
@@ -91,7 +113,7 @@ class symfony2_centos {
 		require => Exec["php-composer"],
         notify  => Class['php::fpm::service'],
     }
-	
+
 	file { "/vagrant/project":
         owner   => nginx,
         group   => nginx,
@@ -103,8 +125,23 @@ class symfony2_centos {
 			Service['nginx']
 		],
     }
-	
+
 }
+
+class nginx_setup_test {
+
+    #
+    # Add our nginx.conf file
+    #
+    file { '/etc/nginx/nginx.conf':
+        source  => "/vagrant/puppet/modules/nginx/nginx.conf",
+        force   => "true",
+        require => Package['nginx'],
+        notify  => Service['nginx'],
+    }
+
+}
+
 
 
 class {'vim':}
@@ -126,3 +163,4 @@ class { 'memcached':
 include setup_nginx
 include setup_php_centos
 include symfony2_centos
+include nginx_setup_test

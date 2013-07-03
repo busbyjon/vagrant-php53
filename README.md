@@ -38,4 +38,4 @@ vagrant up
 
 and then put your code in the ```project``` directory and goto:
 
-http://localhost:8000/ in a web browser
+http://localhost:8080/ in a web browser
